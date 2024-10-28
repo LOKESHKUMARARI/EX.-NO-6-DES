@@ -19,51 +19,49 @@
 
 ```
 #include <stdio.h>
-    #include <string.h>
-    #include <stdint.h>
+#include <string.h>
 
-    uint64_t stringToBinary(const char *str) {
-    uint64_t binary = 0;
-    for (int i = 0; i < 8 && str[i] != '\0'; ++i) {
-        binary <<= 8;
-        binary |= (uint64_t)str[i];
+// Simple XOR-based "encryption" for demonstration only
+void simpleEncryptDecrypt(const char *input, char *output, const char *key) {
+    size_t len = strlen(input);
+    size_t key_len = strlen(key);
+
+    for (size_t i = 0; i < len; i++) {
+        output[i] = input[i] ^ key[i % key_len]; // XOR each character with the key
     }
-    return binary;
+    output[len] = '\0'; // Null-terminate the output
+}
+
+int main() {
+    char plaintext[] = "LOKESH";         // Input plaintext
+    char key[] = "SIMPLEKEY";            // Simple key for encryption
+    char ciphertext[128];                // Buffer for ciphertext
+    char decryptedtext[128];             // Buffer for decrypted text
+
+    printf("Plaintext: %s\n", plaintext);
+
+    // Encrypt the plaintext
+    simpleEncryptDecrypt(plaintext, ciphertext, key);
+    printf("Encrypted text: ");
+    for (int i = 0; i < strlen(plaintext); i++) {
+        printf("%02X ", (unsigned char)ciphertext[i]); // Display as hex
     }
+    printf("\n");
 
-    uint32_t XOR(uint32_t a, uint32_t b) {
-    return a ^ b;
-    }
-
-    uint64_t encryptDES(uint64_t plainText) {
-    uint32_t left = (plainText >> 32) & 0xFFFFFFFF;
-    uint32_t right = plainText & 0xFFFFFFFF;
-    uint32_t xorResult = XOR(left, right);
-    uint64_t cipherText = 0;
-    cipherText = ((uint64_t)right << 32) | xorResult;
-
-    return cipherText;
-    }
-
-    int main() {
-    char plainText[9];  
-    printf("Enter an 8-character plaintext: ");
-    fgets(plainText, sizeof(plainText), stdin);
-    plainText[strcspn(plainText, "\n")] = 0;  
-    uint64_t binaryPlainText = stringToBinary(plainText);
-
-    uint64_t cipherText = encryptDES(binaryPlainText);
-
-  
-    printf("Encrypted Cipher Text (in hex): %016llX\n", cipherText);
+    // Decrypt the ciphertext
+    simpleEncryptDecrypt(ciphertext, decryptedtext, key);
+    printf("Decrypted text: %s\n", decryptedtext);
 
     return 0;
-    }
+}
+
 ```
 
 ## OUTPUT:
 
-![image](https://github.com/user-attachments/assets/97ec41fe-3648-401e-aa42-4c5f2627ca48)
+![image](https://github.com/user-attachments/assets/48a28224-7c0d-4889-a239-150e83c3f3ec)
+
+
 
 
 ## RESULT:
